@@ -1,0 +1,115 @@
+Upgrade the existing Interza AI application UI and features to a premium, futuristic AI product experience. Do NOT rebuild the app. Only enhance design, visuals, and add voice interaction.
+
+🎨 DESIGN UPGRADE (VERY IMPORTANT)
+
+Transform the UI to match a futuristic AI dashboard style:
+
+Background:
+Use deep dark gradient (#020617 → #0f172a → #020617)
+Add a subtle animated "neural network / dots & lines" effect in background (like AI brain network)
+Add soft glowing particles (low opacity)
+Replace current plain background with:
+Radial glow behind logo
+Subtle animated gradient movement
+
+🧠 LOGO UPGRADE (IMPORTANT)
+
+Replace emoji brain with a custom styled brain UI
+Create a glowing brain using:
+SVG or styled div
+Blue neon glow (#3B82F6)
+Pulse animation (scale + glow)
+Add:
+Floating animation (slow up-down)
+Soft outer glow
+Slight rotation or breathing effect
+Logo must remain:
+✔ Centered on home page
+✔ Premium look (not emoji)
+
+🏠 HOME PAGE IMPROVEMENTS
+
+Keep everything centered
+Add:
+Glow effect on "INTERZA AI"
+Smooth fade-in animation
+Button hover animation (scale + glow)
+Add background depth:
+Dark overlay + light animated particles
+
+🎤 VOICE ASSISTANT (VERY IMPORTANT)
+
+Add full voice interaction:
+
+Microphone button near answer input
+On click:
+Start SpeechRecognition (webkit fallback)
+Convert speech → text → fill textarea
+Auto voice playback:
+When question appears → read aloud using SpeechSynthesis
+Replay button:
+Re-read question
+Add small status indicator:
+"Listening..." when mic active
+
+🧠 INTERVIEW UI UPGRADE
+
+Improve layout:
+
+LEFT:
+
+Question card (glass effect)
+Textarea (dark + glowing border on focus)
+
+RIGHT:
+
+Camera preview card
+Add subtle glow border
+
+TOP:
+
+Role / Mode / Round / Personality cards
+Add hover animation
+
+BOTTOM:
+
+Progress bar (animated)
+Time elapsed (live update)
+Questions remaining
+
+✨ ANIMATIONS
+
+Add smooth animations:
+
+Page transitions (fade + slide)
+Button hover glow
+Card hover lift
+Progress bar animation
+Logo floating animation
+
+🎯 UX IMPROVEMENTS
+
+Better spacing
+Rounded cards
+Glassmorphism:
+backdrop-filter: blur(10px)
+background: rgba(255,255,255,0.05)
+Remove clutter
+Make everything feel premium
+
+⚠️ IMPORTANT RULES
+
+Do NOT break existing navigation
+Do NOT remove current logic
+Only enhance UI and add voice features
+Keep code clean and working
+
+🎯 FINAL GOAL
+
+The app should look like:
+
+✔ AI startup product
+✔ Futuristic interface
+✔ Smooth animations
+✔ Voice-enabled interview system
+✔ Premium quality (not basic UI)

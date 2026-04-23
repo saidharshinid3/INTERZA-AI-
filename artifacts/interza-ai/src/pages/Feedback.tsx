@@ -59,23 +59,27 @@ export function Feedback() {
     }
 
     // Pad arrays to 3 items with generic feedback if needed
-    while(strengths.length < 3) strengths.push(
+    const strengthFillers = [
       "Clear communication style.",
       "Professional tone maintained.",
-      "Good alignment with role expectations."
-    )[strengths.length];
-    
-    while(weaknesses.length < 3) weaknesses.push(
+      "Good alignment with role expectations.",
+    ];
+    const weaknessFillers = [
       "Could bridge topics more smoothly.",
       "Sometimes hesitated before core points.",
-      "Technical depth could be expanded."
-    )[weaknesses.length];
-
-    while(improvements.length < 3) improvements.push(
+      "Technical depth could be expanded.",
+    ];
+    const improvementFillers = [
       "Structure answers using the STAR method.",
       "Take a moment to pause before responding.",
-      "Connect answers back to business impact."
-    )[improvements.length];
+      "Connect answers back to business impact.",
+    ];
+    let si = 0;
+    while (strengths.length < 3) strengths.push(strengthFillers[si++ % strengthFillers.length]);
+    let wi = 0;
+    while (weaknesses.length < 3) weaknesses.push(weaknessFillers[wi++ % weaknessFillers.length]);
+    let ii = 0;
+    while (improvements.length < 3) improvements.push(improvementFillers[ii++ % improvementFillers.length]);
 
     setFeedback({
       score: finalScore,

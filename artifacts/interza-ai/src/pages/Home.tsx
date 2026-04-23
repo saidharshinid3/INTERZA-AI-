@@ -1,34 +1,54 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Logo } from "@/components/Logo";
+import { AnimatedBackground } from "@/components/AnimatedBackground";
 import { Button } from "@/components/ui/button";
 
 export function Home() {
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-6 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-background to-background pointer-events-none" />
-      
+      <AnimatedBackground particleCount={22} />
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="z-10 flex flex-col items-center text-center space-y-8"
+        transition={{ duration: 0.9, ease: "easeOut" }}
+        className="z-10 flex flex-col items-center text-center space-y-10"
       >
-        <Logo className="mb-4" />
-        
+        <Logo />
+
         <div className="space-y-4">
-          <h1 className="text-5xl md:text-7xl font-bold tracking-widest text-foreground glow-text">
+          <motion.h1
+            initial={{ opacity: 0, letterSpacing: "0.1em" }}
+            animate={{ opacity: 1, letterSpacing: "0.25em" }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className="text-5xl md:text-7xl font-bold tracking-widest text-foreground glow-text"
+          >
             INTERZA AI
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto">
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
+            className="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto"
+          >
             Master Every Interview with Confidence.
-          </p>
+          </motion.p>
         </div>
 
         <Link href="/setup">
-          <Button size="lg" className="h-14 px-8 text-lg rounded-full font-semibold mt-8 glow shadow-lg hover:shadow-xl transition-all duration-300">
-            Start Interview
-          </Button>
+          <motion.div
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 320, damping: 18 }}
+          >
+            <Button
+              size="lg"
+              className="h-14 px-10 text-lg rounded-full font-semibold mt-6 glow glow-hover"
+            >
+              Start Interview
+            </Button>
+          </motion.div>
         </Link>
       </motion.div>
     </div>
