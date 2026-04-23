@@ -39,7 +39,7 @@ export function Interview() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const recognitionRef = useRef<ReturnType<typeof getSpeechRecognition>>(null);
   const baseTextRef = useRef<string>("");
-  const lastSpokenIndexRef = useRef<number>(-1);
+  const lastSpokenIdRef = useRef<string | null>(null);
   const [cameraError, setCameraError] = useState(false);
 
   // Init questions only (do NOT speak here — speech is driven by the index effect below)
@@ -54,23 +54,21 @@ export function Interview() {
   }, []);
 
   // Single source of truth for speaking the current question.
-  // Runs once per question change, guarded against StrictMode double-invoke.
+  // Tracks the last spoken question id so re-renders never replay it.
+  const currentQuestionId = questions[currentIndex]?.id ?? null;
   useEffect(() => {
-    if (!personality || questions.length === 0) return;
+    if (!personality || !currentQuestionId) return;
+    if (lastSpokenIdRef.current === currentQuestionId) return;
     const q = questions[currentIndex];
     if (!q) return;
-    if (lastSpokenIndexRef.current === currentIndex) return;
-    lastSpokenIndexRef.current = currentIndex;
+    lastSpokenIdRef.current = currentQuestionId;
 
-    const timer = setTimeout(() => {
-      speakText(q.text, personality, {
-        key: `q-${q.id}`,
-        onStart: () => setIsSpeaking(true),
-        onEnd: () => setIsSpeaking(false),
-      });
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [questions, currentIndex, personality]);
+    speakText(q.text, personality, {
+      key: `q-${currentQuestionId}`,
+      onStart: () => setIsSpeaking(true),
+      onEnd: () => setIsSpeaking(false),
+    });
+  }, [currentQuestionId, personality]);
 
   // Timer
   useEffect(() => {

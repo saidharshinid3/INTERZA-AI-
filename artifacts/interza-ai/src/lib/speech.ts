@@ -1,31 +1,12 @@
 import { Personality } from "./store";
 
-let currentUtterance: SpeechSynthesisUtterance | null = null;
-let lastSpokenKey: string | null = null;
-let lastSpokenAt = 0;
+let activeUtterance: SpeechSynthesisUtterance | null = null;
+let activeKey: string | null = null;
 
-export function speakText(
-  text: string,
+function configureUtterance(
+  utterance: SpeechSynthesisUtterance,
   personality: Personality,
-  options?: { onStart?: () => void; onEnd?: () => void; key?: string },
 ) {
-  if (!text || typeof window === "undefined" || !window.speechSynthesis) return;
-
-  // De-dupe: ignore identical requests fired within 800ms (covers StrictMode
-  // double-invocation and accidental double triggers).
-  const key = options?.key ?? text;
-  const now = Date.now();
-  if (key === lastSpokenKey && now - lastSpokenAt < 800) {
-    return;
-  }
-  lastSpokenKey = key;
-  lastSpokenAt = now;
-
-  // Always cancel any pending/active speech before queuing new.
-  window.speechSynthesis.cancel();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-
   if (personality === "Friendly") {
     utterance.pitch = 1.1;
     utterance.rate = 1.0;
@@ -36,25 +17,73 @@ export function speakText(
     utterance.pitch = 1.0;
     utterance.rate = 1.0;
   }
+}
 
-  utterance.onstart = () => options?.onStart?.();
-  utterance.onend = () => {
-    if (currentUtterance === utterance) currentUtterance = null;
+/**
+ * Speak `text` using SpeechSynthesis.
+ * - HARD-cancels any prior speech first.
+ * - If the same `key` is already being spoken (or queued), the new request is
+ *   ignored to prevent overlap/echo.
+ * - Pass `force: true` (e.g. for the Replay button) to bypass the same-key
+ *   guard.
+ */
+export function speakText(
+  text: string,
+  personality: Personality,
+  options?: {
+    key?: string;
+    force?: boolean;
+    onStart?: () => void;
+    onEnd?: () => void;
+  },
+) {
+  if (!text || typeof window === "undefined" || !window.speechSynthesis) return;
+
+  const synth = window.speechSynthesis;
+  const key = options?.key ?? text;
+
+  // If the same key is currently active (speaking or queued), do nothing.
+  if (!options?.force && activeKey === key && (synth.speaking || synth.pending)) {
+    return;
+  }
+
+  // Hard stop anything previously speaking/queued.
+  synth.cancel();
+  activeUtterance = null;
+  activeKey = null;
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  configureUtterance(utterance, personality);
+
+  utterance.onstart = () => {
+    options?.onStart?.();
+  };
+  const finalize = () => {
+    if (activeUtterance === utterance) {
+      activeUtterance = null;
+      activeKey = null;
+    }
     options?.onEnd?.();
   };
-  utterance.onerror = () => {
-    if (currentUtterance === utterance) currentUtterance = null;
-    options?.onEnd?.();
-  };
+  utterance.onend = finalize;
+  utterance.onerror = finalize;
 
-  currentUtterance = utterance;
-  window.speechSynthesis.speak(utterance);
+  activeUtterance = utterance;
+  activeKey = key;
+
+  // Defer to next tick so any in-flight cancel() fully drains in Chrome.
+  setTimeout(() => {
+    if (activeUtterance === utterance) {
+      synth.speak(utterance);
+    }
+  }, 0);
 }
 
 export function cancelSpeech() {
-  if (window.speechSynthesis) {
-    window.speechSynthesis.cancel();
-  }
+  if (typeof window === "undefined" || !window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  activeUtterance = null;
+  activeKey = null;
 }
 
 type SpeechRecognitionLike = {
