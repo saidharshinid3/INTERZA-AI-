@@ -33,14 +33,16 @@ export function Interview() {
   const [answerText, setAnswerText] = useState("");
   const [elapsedTime, setElapsedTime] = useState(0);
   const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
   const [micError, setMicError] = useState<string | null>(null);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const recognitionRef = useRef<ReturnType<typeof getSpeechRecognition>>(null);
   const baseTextRef = useRef<string>("");
+  const lastSpokenIndexRef = useRef<number>(-1);
   const [cameraError, setCameraError] = useState(false);
 
-  // Init questions + auto-speak first
+  // Init questions only (do NOT speak here — speech is driven by the index effect below)
   useEffect(() => {
     if (!role || !mode || !personality || (mode === "Interview" && !round)) {
       setLocation("/setup");
@@ -48,14 +50,27 @@ export function Interview() {
     }
     const qList = getQuestions(role, mode, round);
     setQuestions(qList);
-    const timer = setTimeout(() => {
-      if (qList.length > 0) {
-        speakText(qList[0].text, personality);
-      }
-    }, 500);
-    return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Single source of truth for speaking the current question.
+  // Runs once per question change, guarded against StrictMode double-invoke.
+  useEffect(() => {
+    if (!personality || questions.length === 0) return;
+    const q = questions[currentIndex];
+    if (!q) return;
+    if (lastSpokenIndexRef.current === currentIndex) return;
+    lastSpokenIndexRef.current = currentIndex;
+
+    const timer = setTimeout(() => {
+      speakText(q.text, personality, {
+        key: `q-${q.id}`,
+        onStart: () => setIsSpeaking(true),
+        onEnd: () => setIsSpeaking(false),
+      });
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [questions, currentIndex, personality]);
 
   // Timer
   useEffect(() => {
@@ -185,8 +200,9 @@ export function Interview() {
     if (currentIndex < questions.length - 1) {
       setAnswerText("");
       baseTextRef.current = "";
+      cancelSpeech();
       setCurrentIndex((prev) => prev + 1);
-      speakText(questions[currentIndex + 1].text, personality!);
+      // Speech for the new question is triggered by the useEffect on currentIndex.
     } else {
       cancelSpeech();
       setLocation("/feedback");
@@ -194,7 +210,12 @@ export function Interview() {
   };
 
   const replayVoice = () => {
-    speakText(currentQ.text, personality!);
+    // Force-allow even if recently spoken by using a unique key.
+    speakText(currentQ.text, personality!, {
+      key: `q-${currentQ.id}-replay-${Date.now()}`,
+      onStart: () => setIsSpeaking(true),
+      onEnd: () => setIsSpeaking(false),
+    });
   };
 
   return (
