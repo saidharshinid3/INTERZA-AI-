@@ -1,0 +1,171 @@
+Build a **modern AI Interview Simulation Web App** named **Interza AI** using React.
+
+IMPORTANT: This must be a **multi-page app (not a single screen)** with clean navigation using React state (no routing required).
+
+---
+
+🎯 DESIGN REQUIREMENTS (VERY IMPORTANT)
+
+* Dark professional UI (NOT colorful)
+* Background: gradient navy → black (#0f172a → #020617)
+* Accent color: soft blue (#3B82F6)
+* Use glassmorphism cards (blur + transparency)
+* Smooth animations (fade, hover glow, scale)
+* Clean spacing, modern typography
+* Fully responsive (desktop + mobile)
+
+---
+
+🧠 LOGO REQUIREMENT
+
+* Use a **brain-style logo (🧠 or SVG brain icon)**
+* Logo MUST be:
+
+  * Centered on home page
+  * Slight glow effect
+  * Subtle floating animation
+* App name "INTERZA AI" below logo (center aligned)
+
+---
+
+📱 APP STRUCTURE (VERY IMPORTANT)
+
+Use state-based navigation:
+
+const [page, setPage] = useState("home");
+
+Pages required:
+
+1. HOME PAGE
+2. SETUP PAGE
+3. INTERVIEW PAGE
+4. ANALYTICS PAGE
+
+---
+
+🏠 PAGE 1 — HOME
+
+CENTERED layout:
+
+* Brain logo (animated)
+* Title: INTERZA AI
+* Subtitle: "Master every interview with AI confidence"
+* Start Button → goes to SETUP page
+
+---
+
+⚙️ PAGE 2 — SETUP
+
+User selects:
+
+* Role:
+
+  * Software Engineer
+  * Data Analyst
+  * HR
+
+* Mode:
+
+  * Practice Mode
+  * Interview Mode
+
+* Round:
+
+  * Technical
+  * Behavioral
+
+* Personality:
+
+  * Friendly
+  * Strict
+
+Start button → goes to INTERVIEW
+
+---
+
+🎤 PAGE 3 — INTERVIEW SCREEN
+
+Layout:
+
+LEFT SIDE:
+
+* Question display
+* Textarea input
+* Buttons:
+
+  * 🎤 Voice Input (optional mock)
+  * 🔁 Replay Question
+  * ➡ Next Question
+
+RIGHT SIDE:
+
+* Camera preview box (placeholder)
+* Status: "Camera Ready"
+
+TOP SECTION:
+
+* Show:
+  Role | Mode | Round | Personality
+
+BOTTOM SECTION:
+
+* Progress bar
+* Time elapsed
+* Questions answered / remaining
+
+---
+
+📊 LOGIC REQUIREMENTS
+
+* Practice Mode:
+  → 30 question bank
+  → randomly show 10 questions
+
+* Interview Mode:
+  → exactly 8 questions
+
+Store questions in array.
+
+---
+
+📈 PAGE 4 — ANALYTICS
+
+Show:
+
+* Score (mock)
+* Strengths
+* Weaknesses
+* Improvement tips
+* Restart button → goes to HOME
+
+---
+
+⚡ FUNCTIONAL REQUIREMENTS
+
+* Smooth transitions between pages
+* Use useState for navigation
+* Clean modular structure inside App.js
+* No external backend needed
+* No errors
+
+---
+
+🎨 EXTRA FEATURES
+
+* Hover glow buttons
+* Animated logo
+* Clean cards UI
+* Progress bar animation
+
+---
+
+OUTPUT REQUIREMENT
+
+* Give FULL working code inside App.js
+* Must run without errors in Replit
+* Do NOT use external libraries
+* Keep everything inside one file
+
+---
+
+Goal: The UI should look like a **premium SaaS product (similar to ChatGPT / modern AI apps)** — not basic.
